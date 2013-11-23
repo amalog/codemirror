@@ -50,6 +50,29 @@ strings`
       indentWithTabs: false,
       electricChars: true,
       keyMap: 'emacs',
+      extraKeys: {
+        /*
+        "Backspace": function (cm) {
+            if (cm.somethingSelected()) return CodeMirror.Pass;
+            var cursor = cm.getCursor("start");
+            if (cursor.ch < 4) return CodeMirror.Pass;
+            var back = {
+                line: cursor.line,
+                ch: cursor.ch - 4,
+            };
+            var text = cm.getRange(back, cursor);
+            if (text=="    ") {
+                cm.replaceSelection("", back, cursor);
+                return;
+            }
+            return CodeMirror.Pass;
+        },
+        */
+        "Enter": "newlineAndIndent",
+        "Tab": function (cm) {
+            cm.replaceSelection("    ", "end", "+input");
+        },
+      },
     });
   </script>
 </section>

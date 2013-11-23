@@ -96,6 +96,10 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
         state.indented = stream.indentation();
         state.startOfLine = true;
       }
+      if (stream.eol()) {
+          state.indented = stream.indentation();
+          return null;
+      }
       if (stream.eatSpace()) return null;
       var style = (state.tokenize || tokenBase)(stream, state);
       if (style == "comment" || style == "meta") return style;
@@ -105,7 +109,7 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     },
 
     indent: function(state, textAfter) {
-      return 4;
+      return state.indented;
     },
 
     electricChars: "{}",
