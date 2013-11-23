@@ -1,0 +1,38 @@
+<!doctype html>
+
+<title>Amalog CodeMirror Mode</title>
+<meta charset="utf-8"/>
+
+<script src="codemirror-3.20/lib/codemirror.js"></script>
+<link rel=stylesheet href="codemirror-3.20/lib/codemirror.css">
+<script src="amalog.js"></script>
+
+<article>
+
+<section id=demo>
+  <h2>This is CodeMirror</h2>
+  <textarea id=demotext>
+// here is a comment
+main _
+    say `hello raw strings`
+    say 'hello to atoms'
+    say "hello to sugary strings"
+    X is 7 + 2.398
+
+
+lengthy `hello
+multiline
+strings`
+</textarea>
+  
+  <script>
+    var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
+      lineNumbers: true,
+      indentUnit: 4,
+      indentWithTabs: false,
+      electricChars: true,
+    });
+  </script>
+</section>
+
+</article>
