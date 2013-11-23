@@ -5,8 +5,7 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
       keywords = parserConfig.keywords || {},
       builtin = parserConfig.builtin || {},
       blockKeywords = parserConfig.blockKeywords || {},
-      atoms = parserConfig.atoms || {},
-      multiLineStrings = true;
+      atoms = parserConfig.atoms || {};
   var isOperatorChar = /[+\-*&%=<>!?|\/]/;
 
   var curPunc;
@@ -60,7 +59,7 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
         if (next == quote && !escaped) {end = true; break;}
         escaped = !escaped && next == "\\";
       }
-      if (end || !(escaped || multiLineStrings))
+      if (end)
         state.tokenize = null;
       return "string";
     };
