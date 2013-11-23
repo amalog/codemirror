@@ -1,7 +1,6 @@
 CodeMirror.defineMode("amalog", function(config, parserConfig) {
   var indentUnit = 4,
       statementIndentUnit = parserConfig.statementIndentUnit || indentUnit,
-      dontAlignCalls = parserConfig.dontAlignCalls,
       keywords = {
           about: true,
           main: true,
@@ -13,8 +12,6 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
       },
       atoms = parserConfig.atoms || {};
 
-  var curPunc;
-
   function tokenBase(stream, state) {
     var ch = stream.next();
     if (ch == '"' || ch == "`") {
@@ -22,7 +19,6 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
       return state.tokenize(stream, state);
     }
     if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
-      curPunc = ch;
       return null;
     }
     if (/\d/.test(ch)) {
@@ -84,18 +80,17 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     return "comment";
   }
 
-  function Context(indented, column, type, align, prev) {
+  function Context(indented, column, type, prev) {
     this.indented = indented;
     this.column = column;
     this.type = type;
-    this.align = align;
     this.prev = prev;
   }
   function pushContext(state, col, type) {
     var indent = state.indented;
     if (state.context && state.context.type == "statement")
       indent = state.context.indented;
-    return state.context = new Context(indent, col, type, null, state.context);
+    return state.context = new Context(indent, col, type, state.context);
   }
   function popContext(state) {
     var t = state.context.type;
@@ -119,28 +114,13 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     token: function(stream, state) {
       var ctx = state.context;
       if (stream.sol()) {
-        if (ctx.align == null) ctx.align = false;
         state.indented = stream.indentation();
         state.startOfLine = true;
       }
       if (stream.eatSpace()) return null;
-      curPunc = null;
       var style = (state.tokenize || tokenBase)(stream, state);
       if (style == "comment" || style == "meta") return style;
-      if (ctx.align == null) ctx.align = true;
 
-      if ((curPunc == ";" || curPunc == ":" || curPunc == ",") && ctx.type == "statement") popContext(state);
-      else if (curPunc == "{") pushContext(state, stream.column(), "}");
-      else if (curPunc == "[") pushContext(state, stream.column(), "]");
-      else if (curPunc == "(") pushContext(state, stream.column(), ")");
-      else if (curPunc == "}") {
-        while (ctx.type == "statement") ctx = popContext(state);
-        if (ctx.type == "}") ctx = popContext(state);
-        while (ctx.type == "statement") ctx = popContext(state);
-      }
-      else if (curPunc == ctx.type) popContext(state);
-      else if (((ctx.type == "}" || ctx.type == "top") && curPunc != ';') || (ctx.type == "statement" && curPunc == "newstatement"))
-        pushContext(state, stream.column(), "statement");
       state.startOfLine = false;
       return style;
     },
