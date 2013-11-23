@@ -80,39 +80,18 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     return "comment";
   }
 
-  function Context(indented, column, type, prev) {
-    this.indented = indented;
-    this.column = column;
-    this.type = type;
-    this.prev = prev;
-  }
-  function pushContext(state, col, type) {
-    var indent = state.indented;
-    if (state.context && state.context.type == "statement")
-      indent = state.context.indented;
-    return state.context = new Context(indent, col, type, state.context);
-  }
-  function popContext(state) {
-    var t = state.context.type;
-    if (t == ")" || t == "]" || t == "}")
-      state.indented = state.context.indented;
-    return state.context = state.context.prev;
-  }
-
   // Interface
 
   return {
     startState: function(basecolumn) {
       return {
         tokenize: null,
-        context: new Context((basecolumn || 0) - indentUnit, 0, "top", false),
         indented: 0,
         startOfLine: true
       };
     },
 
     token: function(stream, state) {
-      var ctx = state.context;
       if (stream.sol()) {
         state.indented = stream.indentation();
         state.startOfLine = true;
@@ -126,7 +105,6 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     },
 
     indent: function(state, textAfter) {
-      var ctx = state.context;
       return 4;
     },
 
