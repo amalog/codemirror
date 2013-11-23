@@ -1,0 +1,33 @@
+/*
+comments should not draw attention to themselves.
+make them a subtle grey color.
+*/
+.cm-s-default .cm-comment {
+    color: #AAA;
+}
+
+/*
+strings typically have valuable information.
+they should draw attention somewhat.
+*/
+.cm-s-default .cm-string {
+    color: #C00;
+}
+
+/*
+variables
+*/
+.cm-s-default .cm-variable {
+    color: brown;
+}
+.cm-s-default .cm-anonymous-variable {
+    color: brown;
+    font-style: italic;
+}
+
+/*
+atoms
+*/
+.cm-s-default .cm-atom {
+    color: black;
+}
