@@ -12,7 +12,7 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
 
   function tokenBase(stream, state) {
     var ch = stream.next();
-    if (ch == '"' || ch == "'" || ch == "`") {
+    if (ch == '"' || ch == "`") {
       state.tokenize = tokenString(ch);
       return state.tokenize(stream, state);
     }
