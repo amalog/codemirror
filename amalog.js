@@ -163,9 +163,6 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     for (var i = 0; i < words.length; ++i) obj[words[i]] = true;
     return obj;
   }
-  var cKeywords = "auto if break int case long char register continue return default short do sizeof " +
-    "double static else struct entry switch extern typedef float union for unsigned " +
-    "goto while enum void const signed volatile";
 
   function mimes(ms, mode) {
     for (var i = 0; i < ms.length; ++i) CodeMirror.defineMIME(ms[i], mode);
@@ -173,17 +170,8 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
 
   mimes(["text/x-csrc", "text/x-c", "text/x-chdr"], {
     name: "clike",
-    keywords: words(cKeywords),
+    keywords: words("is"),
     blockKeywords: words("case do else for if switch while struct"),
     atoms: words("null"),
-  });
-  mimes(["text/x-c++src", "text/x-c++hdr"], {
-    name: "clike",
-    keywords: words(cKeywords + " asm dynamic_cast namespace reinterpret_cast try bool explicit new " +
-                    "static_cast typeid catch operator template typename class friend private " +
-                    "this using const_cast inline public throw virtual delete mutable protected " +
-                    "wchar_t"),
-    blockKeywords: words("catch class do else finally for if struct switch try while"),
-    atoms: words("true false null"),
   });
 }());
