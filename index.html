@@ -17,11 +17,18 @@
 // here is a comment
 main _
     say `hello raw strings`
-    say 'hello to atoms'
+    say hello // atoms have no quoted form
     say "hello to sugary strings"
+    lengthy Msg
+    say Msg
     X is 7 + 2.398
 
 
+/*
+This predicate defines a long
+message which needs to be split across
+multiple lines. Just like this comment.
+*/
 lengthy `hello
 multiline
 strings`
