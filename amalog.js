@@ -1,12 +1,11 @@
 CodeMirror.defineMode("amalog", function(config, parserConfig) {
-  var indentUnit = config.indentUnit,
+  var indentUnit = 4,
       statementIndentUnit = parserConfig.statementIndentUnit || indentUnit,
       dontAlignCalls = parserConfig.dontAlignCalls,
       keywords = parserConfig.keywords || {},
       builtin = parserConfig.builtin || {},
       blockKeywords = parserConfig.blockKeywords || {},
       atoms = parserConfig.atoms || {},
-      hooks = parserConfig.hooks || {},
       multiLineStrings = true;
   var isOperatorChar = /[+\-*&%=<>!?|\/]/;
 
@@ -14,10 +13,6 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
 
   function tokenBase(stream, state) {
     var ch = stream.next();
-    if (hooks[ch]) {
-      var result = hooks[ch](stream, state);
-      if (result !== false) return result;
-    }
     if (ch == '"' || ch == "'" || ch == "`") {
       state.tokenize = tokenString(ch);
       return state.tokenize(stream, state);
@@ -173,36 +168,6 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     "double static else struct entry switch extern typedef float union for unsigned " +
     "goto while enum void const signed volatile";
 
-  function cppHook(stream, state) {
-    if (!state.startOfLine) return false;
-    for (;;) {
-      if (stream.skipTo("\\")) {
-        stream.next();
-        if (stream.eol()) {
-          state.tokenize = cppHook;
-          break;
-        }
-      } else {
-        stream.skipToEnd();
-        state.tokenize = null;
-        break;
-      }
-    }
-    return "meta";
-  }
-
-  // C#-style strings where "" escapes a quote.
-  function tokenAtString(stream, state) {
-    var next;
-    while ((next = stream.next()) != null) {
-      if (next == '"' && !stream.eat('"')) {
-        state.tokenize = null;
-        break;
-      }
-    }
-    return "string";
-  }
-
   function mimes(ms, mode) {
     for (var i = 0; i < ms.length; ++i) CodeMirror.defineMIME(ms[i], mode);
   }
@@ -212,7 +177,6 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     keywords: words(cKeywords),
     blockKeywords: words("case do else for if switch while struct"),
     atoms: words("null"),
-    hooks: {"#": cppHook}
   });
   mimes(["text/x-c++src", "text/x-c++hdr"], {
     name: "clike",
@@ -222,6 +186,5 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
                     "wchar_t"),
     blockKeywords: words("catch class do else finally for if struct switch try while"),
     atoms: words("true false null"),
-    hooks: {"#": cppHook}
   });
 }());
