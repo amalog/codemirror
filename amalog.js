@@ -146,14 +146,8 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     },
 
     indent: function(state, textAfter) {
-      if (state.tokenize != tokenBase && state.tokenize != null) return CodeMirror.Pass;
-      var ctx = state.context, firstChar = textAfter && textAfter.charAt(0);
-      if (ctx.type == "statement" && firstChar == "}") ctx = ctx.prev;
-      var closing = firstChar == ctx.type;
-      if (ctx.type == "statement") return ctx.indented + (firstChar == "{" ? 0 : statementIndentUnit);
-      else if (ctx.align && (!dontAlignCalls || ctx.type != ")")) return ctx.column + (closing ? 0 : 1);
-      else if (ctx.type == ")" && !closing) return ctx.indented + statementIndentUnit;
-      else return ctx.indented + (closing ? 0 : indentUnit);
+      var ctx = state.context;
+      return 4;
     },
 
     electricChars: "{}",
