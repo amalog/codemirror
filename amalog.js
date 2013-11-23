@@ -2,11 +2,16 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
   var indentUnit = 4,
       statementIndentUnit = parserConfig.statementIndentUnit || indentUnit,
       dontAlignCalls = parserConfig.dontAlignCalls,
-      keywords = parserConfig.keywords || {},
-      builtin = parserConfig.builtin || {},
-      blockKeywords = parserConfig.blockKeywords || {},
+      keywords = {
+          about: true,
+          main: true,
+          is: true,
+      },
+      builtins = {
+          load: true,
+          store: true,
+      },
       atoms = parserConfig.atoms || {};
-  var isOperatorChar = /[+\-*&%=<>!?|\/]/;
 
   var curPunc;
 
@@ -21,7 +26,7 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
       return null;
     }
     if (/\d/.test(ch)) {
-      stream.eatWhile(/[\w\.]/);
+      stream.eatWhile(/[\d\.]/);
       return "number";
     }
     if (ch == "/") {
@@ -34,24 +39,21 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
         return "comment";
       }
     }
-    if (isOperatorChar.test(ch)) {
-      stream.eatWhile(isOperatorChar);
-      return "operator";
-    }
     stream.eatWhile(/[\w\$_]/);
     var cur = stream.current();
+    if ( cur == "_" ) {
+        return "anonymous-variable";
+    }
     if ( /_/.test(cur[0]) ) {
-      return "anonymous-variable";
+      return "named-singleton";
     }
     if ( /[A-Z]/.test(cur[0])) {
       return "variable";
     }
-    if (keywords.propertyIsEnumerable(cur)) {
-      if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";
+    if (keywords[cur]) {
       return "keyword";
     }
-    if (builtin.propertyIsEnumerable(cur)) {
-      if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";
+    if (builtins[cur]) {
       return "builtin";
     }
     return "atom";
@@ -163,20 +165,5 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
 });
 
 (function() {
-  function words(str) {
-    var obj = {}, words = str.split(" ");
-    for (var i = 0; i < words.length; ++i) obj[words[i]] = true;
-    return obj;
-  }
-
-  function mimes(ms, mode) {
-    for (var i = 0; i < ms.length; ++i) CodeMirror.defineMIME(ms[i], mode);
-  }
-
-  mimes(["text/x-csrc", "text/x-c", "text/x-chdr"], {
-    name: "clike",
-    keywords: words("is"),
-    blockKeywords: words("case do else for if switch while struct"),
-    atoms: words("null"),
-  });
+    CodeMirror.defineMIME("text/amalog", {name: "amalog"});
 }());

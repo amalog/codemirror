@@ -15,13 +15,22 @@
   <h2>This is CodeMirror</h2>
   <textarea id=demotext>
 // here is a comment
-main _
+about main
+    mode +list is det
+main _Argv
     say `hello raw strings`
     say hello // atoms have no quoted form
     say "hello to sugary strings"
     lengthy Msg
     say Msg
     X is 7 + 2.398
+    complex_predicate
+        really long argument with stuff
+        another argument number 2
+        third lengthy argument (for Y)
+    say Y
+    load Ref Val
+    store Ref [Val Val]
 
 
 /*

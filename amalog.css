@@ -18,10 +18,13 @@ they should draw attention somewhat.
 variables
 */
 .cm-s-default .cm-variable {
-    color: brown;
+    color: #77390E;
 }
 .cm-s-default .cm-anonymous-variable {
-    color: brown;
+    color: black;
+}
+.cm-s-default .cm-named-singleton {
+    color: #C9B7A1;
     font-style: italic;
 }
 
