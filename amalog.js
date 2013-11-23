@@ -40,6 +40,12 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
     }
     stream.eatWhile(/[\w\$_]/);
     var cur = stream.current();
+    if ( /_/.test(cur[0]) ) {
+      return "anonymous-variable";
+    }
+    if ( /[A-Z]/.test(cur[0])) {
+      return "variable";
+    }
     if (keywords.propertyIsEnumerable(cur)) {
       if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";
       return "keyword";
@@ -48,8 +54,7 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
       if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";
       return "builtin";
     }
-    if (atoms.propertyIsEnumerable(cur)) return "atom";
-    return "variable";
+    return "atom";
   }
 
   function tokenString(quote) {
