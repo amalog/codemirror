@@ -25,6 +25,15 @@ CodeMirror.defineMode("amalog", function(config, parserConfig) {
       stream.eatWhile(/[\d\.]/);
       return "number";
     }
+    if (ch == "-") {
+        if (stream.eat(/\d/)) {
+            // negative numbers
+            stream.eatWhile(/[\d\.]/);
+            return "number"
+        }
+        stream.eatWhile(/\S/);
+        return "atom";
+    }
     if (ch == "/") {
       if (stream.eat("*")) {
         state.tokenize = tokenComment;
